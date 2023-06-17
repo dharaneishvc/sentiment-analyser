@@ -1,7 +1,7 @@
-# sentiment-analyser
+# Sentiment Analyser
 Unarvugal: Indian Language Sentiment Analyzer
 
-access the app at http://dharaneishvc.pythonanywhere.com/
+Access the app at http://dharaneishvc.pythonanywhere.com/
 
-# Technology used
+## Technology used
 flask, python, HTML, CSS
