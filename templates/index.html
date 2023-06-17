@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analyzer</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#sentimentForm").submit(function(event) {
+                event.preventDefault();
+                var text = $("#textInput").val();
+                var language = $("#languageSelect").val();
+                $.ajax({
+                    url: "./sentiment-analysis",
+                    type: "POST",
+                    data: JSON.stringify({text: text, language: language}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                        // Update sentiment results
+                        updateSentimentBar("positive", response.positive);
+                        updateSentimentBar("negative", response.negative);
+                        updateSentimentBar("neutral", response.neutral);
+                        updateSentimentBar("compound", response.compound);
+
+                        // Show sentiment results
+                        $(".sentiment-results").show();
+                    }
+                });
+            });
+            
+            function updateSentimentBar(sentiment, percentage) {
+                var fillElement = $("#" + sentiment + "SentimentFill");
+                var percentageElement = $("#" + sentiment + "SentimentPercentage");
+
+                fillElement.width(percentage + "%");
+                percentageElement.text(percentage.toFixed(2) + "%");
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <header class="header">
+        <h2>Bhasha Bhavna: Indian Language Sentiment Analyzer</h2>
+        <p>Unveiling Emotions in Every Word</p>
+    </header>
+
+    <div class="container">
+        <form id="sentimentForm">
+            <label for="languageSelect">Select Language:</label>
+            <select id="languageSelect" name="languageSelect">
+                <option value="auto">Auto</option>
+                <option value="en">English</option>
+                <option value="as">Assamese</option>
+                <option value="bn">Bengali</option>
+                <option value="bhoj">Bhojpuri</option>
+                <option value="dog">Dogri</option>
+                <option value="hi">Hindi</option>
+                <option value="kn">Kannada</option>
+                <option value="gom">Konkani</option>
+                <option value="mai">Maithili</option>
+                <option value="mani">Manipuri</option>
+                <option value="lus">Mizo</option>
+                <option value="mr">Marathi</option>
+                <option value="ne">Nepali</option>
+                <option value="or">Odia</option>
+                <option value="pa">Punjabi</option>
+                <option value="sat">Santali</option>
+                <option value="sd">Sindhi</option>
+                <option value="ta">Tamil</option>
+                <option value="te">Telugu</option>
+                <option value="ur">Urdu</option>
+            </select>            
+            <br>
+
+            <textarea id="textInput" name="textInput" placeholder="Enter Text here" rows="4" cols="50"></textarea><br>
+            <input type="submit" value="Analyze Sentiment">
+        </form>
+
+        <div class="sentiment-results">
+            <h2>Sentiment Results:</h2>
+            <div class="sentiment-bar positive">
+                <span class="sentiment-name">Positive:</span>
+                <div class="sentiment-fill" id="positiveSentimentFill"></div>
+                <span class="sentiment-percentage" id="positiveSentimentPercentage"></span>
+            </div>
+            <div class="sentiment-bar negative">
+                <span class="sentiment-name">Negative:</span>
+                <div class="sentiment-fill" id="negativeSentimentFill"></div>
+                <span class="sentiment-percentage" id="negativeSentimentPercentage"></span>
+            </div>
+            <div class="sentiment-bar neutral">
+                <span class="sentiment-name">Neutral:</span>
+                <div class="sentiment-fill" id="neutralSentimentFill"></div>
+                <span class="sentiment-percentage" id="neutralSentimentPercentage"></span>
+            </div>
+            <div class="sentiment-bar compound">
+                <span class="sentiment-name">Compound:</span>
+                <div class="sentiment-fill" id="compoundSentimentFill"></div>
+                <span class="sentiment-percentage" id="compoundSentimentPercentage"></span>
+            </div>
+        </div>
+        
+    </div>
+
+    <footer class="footer">
+        <p>Designed and developed by <i class="fas fa-heart"></i> <a href="https://dharaneishvc.github.io/portfolio/">Dharaneish</a></p>
+    </footer>
+</body>
+</html>
